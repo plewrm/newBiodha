@@ -1,0 +1,657 @@
+import React, { useEffect, useState } from 'react'
+import { Breadcrumb, SimpleCard } from 'app/components'
+import style from 'Assets/css/style.css'
+import {
+    Button,
+    Grid,
+    Table,
+    TableHead,
+    TableCell,
+    TableBody,
+    IconButton,
+    Icon,
+    TableRow,
+} from '@mui/material'
+import { Box, styled } from '@mui/system'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import {
+    ValidatorForm,
+    TextValidator,
+    SelectValidator,
+} from 'react-material-ui-form-validator'
+/*import TextField from '@mui/material/TextField'*/
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import {
+    postDataFromApi,
+    getDataFromApi,
+    putDataFromApi,
+} from '../../services/CommonService'
+import Switch from '@mui/material/Switch'
+import { useN01SwitchStyles } from '@mui-treasury/styles/switch/n01'
+//Bootstrap and jQuery libraries
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'jquery/dist/jquery.min.js'
+//Datatable Modules
+import 'datatables.net-dt/js/dataTables.dataTables'
+import 'datatables.net-dt/css/jquery.dataTables.min.css'
+import $ from 'jquery'
+import { createFilterOptions } from '@mui/material/Autocomplete'
+import { Autocomplete } from '@mui/lab'
+import AlertMessage from '../commoncomponent/AlertMessage'
+
+const AutoComplete = styled(Autocomplete)(() => ({
+    width: 300,
+    marginBottom: '16px',
+}))
+const TextField = styled(TextValidator)(() => ({
+    width: '100%',
+    marginBottom: '16px',
+}))
+
+const StyledTable = styled(Table)(({ theme }) => ({
+    whiteSpace: 'pre',
+    '& thead': {
+        '& tr': {
+            '& th': {
+                paddingLeft: 0,
+                paddingRight: 0,
+            },
+        },
+    },
+    '& tbody': {
+        '& tr': {
+            '& td': {
+                paddingLeft: 0,
+                textTransform: 'capitalize',
+            },
+        },
+    },
+}))
+
+const Container = styled('div')(({ theme }) => ({
+    margin: '30px',
+    [theme.breakpoints.down('sm')]: {
+        margin: '16px',
+    },
+    '& .breadcrumb': {
+        marginBottom: '30px',
+        [theme.breakpoints.down('sm')]: {
+            marginBottom: '16px',
+        },
+    },
+}))
+
+const districtList = [
+    {
+        id: '1',
+        districtName: 'test',
+    },
+    {
+        id: '2',
+        districtName: 'test1',
+    },
+]
+
+const states = [
+    {
+        stateName: 'gujarat',
+    },
+]
+const cities = [
+    {
+        cityName: 'amhedabad',
+    },
+]
+
+const AppTable = () => {
+    const switchStyles = useN01SwitchStyles()
+    const [district_master, setdistrict_master] = useState([])
+    const [states, setstates] = useState([])
+    const [cities, setcities] = useState([])
+    const [open, setOpen] = useState(false)
+    const [deleteopen, setDeleteOpen] = useState(false)
+
+    const [formdata, setFormData] = useState({ districtName: '' })
+    const [is_edit, setIsEdit] = useState(false)
+    const [edit_id, setEditId] = useState('')
+
+    const [alert, setalert] = useState(false)
+    const [alermessage, setalermessage] = useState('')
+    const [alerttype, setalerttype] = useState('')
+    const [selectedcountry, setselectedcountry] = useState({})
+    const [selectedstate, setselectedstate] = useState({})
+    const [selectedcity, setselectedcity] = useState({})
+    const [selecteddistict, setselecteddistict] = useState({})
+    const [stateoptions, setstateoptions] = useState([])
+    const [cityoptions, setcityoptions] = useState([])
+    const [countryoptions, setcountryoptions] = useState([])
+    const [isLoaded, setIsLoadd] = useState(false)
+
+    const [id, setId] = useState('')
+
+    function setdefaultvalue() {
+        setselectedcountry()
+        setselectedstate()
+        setselectedcity()
+        // setFormData({stateId:"",cityId:"",location:"",nameOfYard:""})
+        setFormData({
+            stateId: '',
+            cityId: '',
+            districtName: '',
+            countryId: '',
+        })
+    }
+
+    function handleClickOpen() {
+        setdefaultvalue()
+        setIsEdit(false)
+        setOpen(true)
+        setIsLoadd(true)
+    }
+    function handleClickEdit(id) {
+        if (district_master) {
+            setId(id)
+            setselecteddistict(district_master[id])
+            getstates(district_master[id].countryId)
+            getcities(district_master[id].stateId)
+            setIsEdit(true)
+            setOpen(true)
+            setEditId(district_master[id].id)
+            setIsLoadd(false)
+        }
+        // setTimeout(() => {
+        //     setFormData((formData) => ({
+        //         ...formData,
+        //         ['stateId']: district_master[id].stateId,
+        //         ['cityId']: district_master[id].cityId,
+        //         ['districtName']: district_master[id].districtName,
+        //         ['countryId']: district_master[id].countryId
+        //     }));
+
+        //     setselectedcountry(getSelectedItem(district_master[id].countryId, 'country'))
+        //     setselectedstate(getSelectedItem(district_master[id].stateId, 'state'))
+        //     setselectedcity(getSelectedItemcity(district_master[id].cityId))
+        //     setEditId(district_master[id].id)
+        //     setIsEdit(true)
+        //     setOpen(true)
+        // }, 2000);
+    }
+    function getSelectedItem(id, Type) {
+        var data = []
+        if (Type == 'country') {
+            data = countryoptions
+        } else {
+            data = stateoptions
+        }
+        console.log('selectTableData', data)
+        const item = data.find((opt) => {
+            if (opt.id == id) return opt
+        })
+        return item || null
+    }
+    function getSelectedItemcity(id) {
+        const item = cityoptions.find((opt) => {
+            if (opt.id == id) return opt
+        })
+        return item || null
+    }
+    const handleCityChange = async (id, isActive) => {
+        isActive = isActive ? 0 : 1
+        var query = 'tableName=districts&isActive=' + isActive
+        const response = await putDataFromApi('masters/isActive/' + id, query)
+        if (response.data.code) {
+            console.log(response.data.message)
+            getdistrict_master()
+            setalermessage(response.data.message)
+            setalert(true)
+            setalerttype('success')
+            $('#customdatatable').DataTable().destroy()
+            getdatatable()
+        } else {
+            setalermessage(response.data.message)
+            setalert(true)
+            setalerttype('error')
+            $('#customdatatable').DataTable().destroy()
+            getdatatable()
+        }
+    }
+    function handleClose() {
+        setOpen(false)
+    }
+    function handleDeleteOpen() {
+        setDeleteOpen(true)
+    }
+
+    function handledeleteClose() {
+        setDeleteOpen(false)
+    }
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        var response = ''
+        if (is_edit) {
+            response = await putDataFromApi(
+                'masters/districtMaster/updateDistrictById/' + edit_id,
+                formdata
+            )
+        } else {
+            response = await postDataFromApi(
+                'masters/districtMaster/createDistrict',
+                formdata
+            )
+        }
+        console.log('edit response', response)
+        if (response.data.code) {
+            // getcities()
+            getstates(response.data.countryId)
+            getdistrict_master()
+            setIsEdit(false)
+            setEditId('')
+            setOpen(false)
+            setalermessage(response.data.message)
+            setalert(true)
+            setalerttype('success')
+        } else {
+            setOpen(false)
+            setalermessage(response.data.message)
+            setalert(true)
+            setalerttype('error')
+        }
+    }
+
+    useEffect(() => {
+        getCountries()
+        // getstates();
+        // getcities();
+        getdistrict_master()
+        getdatatable()
+    }, [])
+
+    useEffect(() => {
+        getdatatable()
+    }, [district_master])
+    useEffect(() => {
+        if (is_edit) {
+            setFormData((formData) => ({
+                ...formData,
+                ['stateId']: selecteddistict.stateId,
+                ['cityId']: selecteddistict.cityId,
+                ['districtName']: selecteddistict.districtName,
+                ['countryId']: selecteddistict.countryId,
+            }))
+
+            setselectedcountry(
+                getSelectedItem(selecteddistict.countryId, 'country')
+            )
+            setselectedstate(getSelectedItem(selecteddistict.stateId, 'state'))
+            setselectedcity(getSelectedItemcity(selecteddistict.cityId))
+            setTimeout(() => {
+                setIsLoadd(true)
+            }, 500)
+        }
+    }, [stateoptions, cityoptions])
+
+    var datatable = ''
+    const getdatatable = async () => {
+        if (datatable) {
+            $('#customdatatable').DataTable().destroy()
+        }
+        $(document).ready(function () {
+            setTimeout(function () {
+                datatable = $('#customdatatable').DataTable()
+            }, 1000)
+        })
+    }
+
+    const getCountries = async () => {
+        var query = 'model=country_masters'
+        const response = await postDataFromApi(
+            'masters/allMasters/findActiveAll',
+            query
+        )
+        if (response && response.data.code && response.data.data != null) {
+            // setstates(response.data.data);
+            var stateopts = []
+            response.data.data.map((country, i) => {
+                var st = []
+                st['id'] = country.id
+                st['label'] = country.countryName
+                stateopts.push(st)
+            })
+            setcountryoptions(stateopts)
+            console.log('states data', response)
+        }
+    }
+
+    const getstates = async (id = '') => {
+        var query = 'model=states'
+        const response = await getDataFromApi(
+            'masters/districtMaster/getStateByCountryId/' + id,
+            query
+        )
+        if (response && response.data.code && response.data.data != null) {
+            setstates(response.data.data)
+            var stateopts = []
+            response.data.data.map((state, i) => {
+                var st = []
+                st['id'] = state.id
+                st['label'] = state.stateName
+                stateopts.push(st)
+            })
+            setstateoptions(stateopts)
+            console.log('states data', response)
+        }
+    }
+
+    const getcities = async (id = '') => {
+        var query = 'model=citys'
+        const response = await getDataFromApi(
+            'masters/districtMaster/getCityByStateId/' + id,
+            query
+        )
+        if (response && response.data.code && response.data.data != null) {
+            setcities(response.data.data)
+            var cityopts = []
+            response.data.data.map((city, i) => {
+                var st = []
+                st['id'] = city.id
+                st['label'] = city.cityName
+                cityopts.push(st)
+            })
+            setcityoptions(cityopts)
+            console.log('city data', response)
+        }
+    }
+
+    const getdistrict_master = async () => {
+        var query = ''
+        const response = await getDataFromApi(
+            'masters/districtMaster/getAllDistrict',
+            query
+        )
+        if (response && response.data.code && response.data.data != null) {
+            setdistrict_master(response.data.data)
+            console.log('District data', response)
+        }
+    }
+
+    function formdatavaluechange(e) {
+        var value = e.target.value.trimStart()
+        setFormData((formData) => ({
+            ...formData,
+            [e.target.name]: value,
+        }))
+    }
+
+    function changedropdownvalue(type, e) {
+        if (e) {
+            var value = e.id
+        } else {
+            var value = ''
+        }
+        setFormData((formData) => ({
+            ...formData,
+            [type]: value,
+        }))
+        if (type == 'countryId') {
+            getstates(e.id)
+        }
+        if (type == 'stateId') {
+            if(e){
+              getcities(e.id)
+            }else{
+                getcities()
+                setcityoptions([])
+            }
+        }
+    }
+    function confirm() {
+        setalert(false)
+    }
+
+    return (
+        <Container>
+            <div className="breadcrumb leftalign_breadcrumb">
+                <Breadcrumb routeSegments={[{ name: 'District' }]} />
+            </div>
+            <Button
+                className="rightalign_btn"
+                variant="outlined"
+                color="primary"
+                onClick={handleClickOpen}
+            >
+                Add new District
+            </Button>
+            <AlertMessage
+                alert={alert}
+                alermessage={alermessage}
+                confirm={confirm}
+                alerttype={alerttype}
+            />
+            <Box width="100%" overflow="auto">
+                <table
+                    id="customdatatable"
+                    className="table table-hover table-bordered"
+                >
+                    <thead>
+                        <tr>
+                            <th>Sr No.</th>
+                            <th>Country Name</th>
+                            <th>State Name</th>
+                            <th>District Name</th>
+                            <th>City Name</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {district_master.map((districts, index) => (
+                            <tr key={index}>
+                                <td align="left">{index + 1}</td>
+                                <td align="left">{districts.countryName}</td>
+                                <td>{districts.stateName}</td>
+                                <td>{districts.districtName}</td>
+                                <td>{districts.cityName}</td>
+                                <td>
+                                    <span className="ac_inactive">
+                                        {districts.isActive
+                                            ? 'Active'
+                                            : 'Inactive'}
+                                    </span>
+                                    <Switch
+                                        classes={switchStyles}
+                                        checked={districts.isActive}
+                                        onChange={() =>
+                                            handleCityChange(
+                                                districts.id,
+                                                districts.isActive
+                                            )
+                                        }
+                                        value="active"
+                                        inputProps={{
+                                            'aria-label': 'secondary checkbox',
+                                        }}
+                                    />
+                                </td>
+                                <td>
+                                    <IconButton
+                                        onClick={() => handleClickEdit(index)}
+                                    >
+                                        <Icon color="primary">edit</Icon>
+                                    </IconButton>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </Box>
+            {isLoaded ? (
+            <Dialog
+                open={open}
+                disableBackdropClick
+                disableEscapeKeyDown
+                aria-labelledby="form-dialog-title"
+            >
+                <ValidatorForm onSubmit={handleSubmit} onError={() => null}>
+                    <DialogTitle id="form-dialog-title">
+                        {is_edit ? 'Update' : 'Add New'} District
+                    </DialogTitle>
+                    <DialogContent>
+                        <Grid container spacing={3}>
+                            <Grid
+                                item
+                                lg={6}
+                                md={6}
+                                sm={12}
+                                xs={12}
+                                sx={{ mt: 2 }}
+                            >
+                                <AutoComplete
+                                    fullWidth
+                                    defaultValue={selectedcountry}
+                                    options={countryoptions}
+                                    getOptionLabel={(option) => option.label}
+                                    onChange={(event, value) =>
+                                        changedropdownvalue('countryId', value)
+                                    }
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            className="required"
+                                            label="Country Name"
+                                            variant="outlined"
+                                            fullWidth
+                                            validators={['required']}
+                                            errorMessages={[
+                                                'this field is required',
+                                            ]}
+                                            value={formdata.countryId}
+                                            name="countryId"
+                                        />
+                                    )}
+                                />
+
+                                <AutoComplete
+                                    fullWidth
+                                    defaultValue={selectedstate}
+                                    options={stateoptions}
+                                    getOptionLabel={(option) => option.label}
+                                    onChange={(event, value) =>
+                                        changedropdownvalue('stateId', value)
+                                    }
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            className="required"
+                                            label="State Name"
+                                            variant="outlined"
+                                            fullWidth
+                                            validators={['required']}
+                                            errorMessages={[
+                                                'this field is required',
+                                            ]}
+                                            value={formdata.stateId}
+                                            name="stateId"
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid
+                                item
+                                lg={6}
+                                md={6}
+                                sm={12}
+                                xs={12}
+                                sx={{ mt: 2 }}
+                            >
+                                <AutoComplete
+                                    fullWidth
+                                    defaultValue={selectedcity}
+                                    options={cityoptions}
+                                    getOptionLabel={(option) => option.label}
+                                    onChange={(event, value) =>
+                                        changedropdownvalue('cityId', value)
+                                    }
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            className="required"
+                                            label="City"
+                                            variant="outlined"
+                                            fullWidth
+                                            validators={['required']}
+                                            errorMessages={[
+                                                'this field is required',
+                                            ]}
+                                            value={formdata.cityId}
+                                            name="cityId"
+                                        />
+                                    )}
+                                />
+
+                                <TextField
+                                    className="required"
+                                    id="districtName"
+                                    label="District"
+                                    type="text"
+                                    fullWidth
+                                    name="districtName"
+                                    value={formdata.districtName || ''}
+                                    onChange={(e) => formdatavaluechange(e)}
+                                    validators={['required']}
+                                    errorMessages={['this field is required']}
+                                    multiline
+                                    rows={3}
+                                />
+                            </Grid>
+                        </Grid>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            variant="outlined"
+                            color="secondary"
+                            onClick={handleClose}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            type="submit"
+                            color="primary"
+                        >
+                            Save
+                        </Button>
+                    </DialogActions>
+                </ValidatorForm>
+            </Dialog>) : ''}
+            <Dialog
+                open={deleteopen}
+                disableBackdropClick
+                disableEscapeKeyDown
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {'Are You Sure You Want to delete this record?'}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description"></DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handledeleteClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handledeleteClose} color="primary">
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Container>
+    )
+}
+
+export default AppTable

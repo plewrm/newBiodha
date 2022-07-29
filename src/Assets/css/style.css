@@ -1,0 +1,426 @@
+.dropdown select {
+    font: inherit;
+    letter-spacing: inherit;
+    color: currentColor;
+    padding: 4px 0 5px;
+    border: 0;
+    box-sizing: content-box;
+    background: none;
+    height: 1.4375em;
+    margin: 0;
+    -webkit-tap-highlight-color: transparent;
+    display: block;
+    min-width: 0;
+    width: 100%;
+    -webkit-animation-name: mui-auto-fill-cancel;
+    animation-name: mui-auto-fill-cancel;
+    -webkit-animation-duration: 10ms;
+    animation-duration: 10ms;
+    padding: 16.5px 0px;
+}
+
+.dropdown {
+    font-size: 14px;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 400;
+    line-height: 1.4375em;
+    letter-spacing: 0.00938em;
+    color: rgba(52, 49, 76, 1);
+    box-sizing: border-box;
+    position: relative;
+    cursor: text;
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    border-radius: 4px;
+    border: 1px solid #c4c4c4;
+    margin-bottom: 5px;
+}
+
+.dropdown_main label {
+    color: rgba(52, 49, 76, 0.54);
+    font-size: 14px;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 400;
+    line-height: 1.4375em;
+    letter-spacing: 0.00938em;
+    padding: 0;
+    position: relative;
+    display: block;
+    transform-origin: top left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(133% - 24px);
+    position: absolute;
+    left: -3px;
+    top: 0;
+    -webkit-transform: translate(14px, -9px) scale(0.75);
+    -moz-transform: translate(14px, -9px) scale(0.75);
+    -ms-transform: translate(14px, -9px) scale(0.75);
+    transform: translate(14px, -9px) scale(0.75);
+    -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, -webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+    transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+    z-index: 1;
+    pointer-events: none;
+    background-color: #fff;
+    padding-left: 7px;
+    padding-right: 7px;
+}
+
+.dropdown_main {
+    position: relative;
+    vertical-align: top;
+    margin-top: 12px;
+    margin-bottom: 0px;
+}
+
+
+@media (min-width: 768px) {
+    .MuiPaper-root.MuiDialog-paper {
+        min-width: 800px;
+    }
+
+    .sku_mapping .MuiPaper-root.MuiDialog-paper {
+        min-width: 1000px;
+    }
+
+    .MuiDialogContent-root {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .navigation .expansion-panel.submenu {
+        padding-left: 30px;
+    }
+
+    .theme-light.MuiBox-root>.MuiBox-root {
+        width: 300px;
+    }
+
+    .theme-light.MuiBox-root>.MuiBox-root:nth-child(2) {
+        margin-left: 300px;
+    }
+}
+
+.MuiDialog-root form .MuiGrid-item>div>div.MuiFormControl-root {
+    margin-top: 6px;
+    margin-bottom: 10px;
+}
+
+.MuiDialog-root .MuiDialogContent-root>div {
+    margin-top: 6px;
+    margin-bottom: 16px;
+}
+
+
+form fieldset legend {
+    margin-bottom: 0px;
+    float: unset;
+}
+
+.MuiDialog-root .MuiAutocomplete-root {
+    width: 100%;
+    margin-top: 6px;
+    margin-bottom: 10px;
+}
+
+.MuiDialog-root .MuiAutocomplete-root>div>.MuiFormControl-root {
+    margin-bottom: 0px !important;
+}
+
+#customdatatable .MuiSwitch-track:before {
+    content: "Active" !important;
+    font-size: 14px;
+}
+
+#customdatatable .MuiSwitch-track:After {
+    content: "Inactive" !important;
+    font-size: 14px;
+}
+
+#customdatatable.skumaping-table .MuiSwitch-track:before {
+    content: "Yes" !important;
+}
+
+#customdatatable.skumaping-table .MuiSwitch-track:After {
+    content: "No" !important;
+}
+
+#customdatatable .MuiSwitch-switchBase.Mui-checked {
+    transform: translateX(63px);
+}
+
+#customdatatable .MuiSwitch-root {
+    width: 135px;
+}
+
+#customdatatable .MuiSwitch-thumb {
+    width: 50px;
+    border-radius: 100px;
+}
+
+#customdatatable .MuiSwitch-track {
+    background: #eb4524;
+}
+
+#customdatatable .Mui-checked+.MuiSwitch-track {
+    background: #5dac3d;
+}
+
+.breadcrumb.leftalign_breadcrumb {
+    display: inline-block;
+}
+
+button.rightalign_btn {
+    display: inline-block;
+    float: right;
+}
+
+table.table-bordered>:not(caption)>*>* {
+    border-width: 0 0px;
+    border-bottom-width: 1px;
+    border-color: rgba(224, 224, 224, 1);
+}
+
+.spe-popup form>h2 {
+    position: sticky;
+    top: 0;
+    z-index: 11;
+    background: #fff;
+}
+
+.spe-popup form>div {
+    padding-bottom: 0;
+}
+
+.spe-popup .spe-btn {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    margin: 0;
+    z-index: 9;
+    width: calc(100% + 24px);
+    margin-left: -24px;
+}
+
+.no-margin-label>label {
+    margin: 0;
+}
+
+.justify-initial {
+    justify-content: initial;
+}
+
+table .MuiAutocomplete-root {
+    width: auto;
+}
+
+button.orderadd {
+    margin-bottom: 30px;
+}
+
+.MuiFormControl-root.required>label:after {
+    content: ' *';
+    color: #FF3D57;
+}
+
+.MuiFormControl-root.required .MuiOutlinedInput-notchedOutline legend span {
+    padding-right: 10px;
+}
+
+.MuiFormControl-root.nolabel .MuiOutlinedInput-notchedOutline legend {
+    width: 0;
+}
+
+.MuiFormControl-root.nolabel .MuiInputAdornment-root p {
+    font-weight: 900;
+}
+
+.create_updated_con>.MuiGrid-root {
+    margin-top: 0px;
+}
+
+.orderview .MuiGrid-item p.MuiTypography-root {
+    /*padding: 5px 14px;
+    border-color: rgb(33, 37, 41);
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding-left: 0;*/
+}
+
+.orderview table td {
+    border-right: 1px solid rgba(224, 224, 224, 1) !important;
+}
+
+.orderview table tr td:first-child {
+    border-left: 1px solid rgba(224, 224, 224, 1) !important;
+}
+
+.orderview .MuiGrid-item p.MuiTypography-root span {
+    font-weight: 500;
+}
+
+.orderview {
+    margin-bottom: 20px;
+}
+
+table .imgPreview {
+    width: 100px;
+    height: 80px;
+}
+
+.MuiFormControl-root.hidden {
+    margin: 0 !important;
+    border: none;
+    width: 0;
+    line-height: 0;
+    padding: 0;
+    height: 0;
+}
+
+.MuiFormControl-root.hidden * {
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    border: none;
+}
+
+.table_scroll {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.table_scroll td:not(:last-child):not(:first-child):not(.addbtn):not(.dropdowntd) {
+    min-width: 150px;
+}
+
+.table_scroll td.dropdowntd {
+    min-width: 200px;
+}
+
+form .MuiButton-outlinedSecondary~button.MuiButton-outlinedPrimary {
+    margin-left: 10px;
+}
+
+.MuiDialog-container .MuiDialogActions-root {
+    padding-right: 24px;
+    padding-left: 24px;
+}
+
+.MuiBox-root.css-lq6dvs {
+    background-color: white;
+    height: 64px;
+    justify-content: right;
+}
+
+tr.parentrow td {
+    font-weight: 600;
+}
+
+.dash_title {
+    color: #212529;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 30px;
+}
+
+.box_shadow {
+    background: #FFFFFF;
+    box-shadow: 0px 4px 35px 12px rgb(0 0 0 / 5%);
+    border-radius: 8px;
+    padding: 15px;
+    height: 100%;
+}
+
+table span.ac_inactive {
+    width: 0;
+    height: 0;
+    font-size: 0;
+    opacity: 0;
+}
+
+.borderdiv {
+    border: 1px solid rgba(224, 224, 224, 1);
+}
+
+label.MuiFormControlLabel-root.hidecheckbox_label .MuiFormControlLabel-label {
+    display: none;
+}
+
+label.MuiFormControlLabel-root.hidecheckbox_label>span {
+    padding-top: 0;
+    padding-bottom: 0px;
+}
+
+.index_set {
+    margin-top: 30px;
+}
+
+.index_set .dash_title {
+    margin-bottom: 10px;
+}
+
+.approve_reject {
+    justify-content: center;
+    text-align: center;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.approve_reject>button.MuiButton-root {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.required-border {
+    border: #eb4524 1px solid;
+}
+
+.view-disabled input,
+.view-disabled {
+    pointer-events: none;
+}
+
+.orderstatusdp input {
+    width: unset;
+}
+
+/* .orderstatuschange .orderstatusdp input{
+    width: unset !important;
+} */
+.MuiGrid-root.MuiGrid-item.loginright>.MuiBox-root {
+    display: grid;
+    align-items: center;
+}
+
+.MuiGrid-root.MuiGrid-item.loginright>.MuiBox-root>form {
+    margin-top: 20px;
+}
+
+.table  td{
+    max-width: 300px;
+    white-space: break-spaces;
+    word-wrap: break-word;
+}
+.table.viewtable td {
+    width: 50%;
+}
+.dashboard-content .table td {
+    max-width: 300px;
+    white-space: break-spaces;
+    word-wrap: break-word;
+}
+table.logdetails{ min-width: 100%;}.MuiGrid-root.fetchgrid >.MuiGrid-root.MuiGrid-item:first-child {
+    max-width: fit-content;
+    max-width: -moz-fit-content;
+    max-width: -webkit-fit-content;
+}
